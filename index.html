@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 280px;
+        }
+        .display {
+            width: 100%;
+            height: 60px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: right;
+            font-size: 32px;
+            padding-right: 10px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .button:hover {
+            background-color: #d0d0d0;
+        }
+        .button:active {
+            background-color: #c0c0c0;
+            transform: scale(0.95);
+        }
+        .button.operator {
+            background-color: #ffa726;
+            color: white;
+        }
+        .button.operator:hover {
+            background-color: #fb8c00;
+        }
+        .button.operator:active {
+            background-color: #fb8c00;
+            transform: scale(0.95);
+        }
+        .button.equal {
+            background-color: #66bb6a;
+            color: white;
+            grid-column: span 4;
+        }
+        .button.equal:hover {
+            background-color: #57a04a;
+        }
+        .button.equal:active {
+            background-color: #43a047;
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display"></div>
+        <div class="buttons">
+            <button class="button" onclick="appendNumber('7')">7</button>
+            <button class="button" onclick="appendNumber('8')">8</button>
+            <button class="button" onclick="appendNumber('9')">9</button>
+            <button class="button operator" onclick="chooseOperator('/')">/</button>
+            <button class="button" onclick="appendNumber('4')">4</button>
+            <button class="button" onclick="appendNumber('5')">5</button>
+            <button class="button" onclick="appendNumber('6')">6</button>
+            <button class="button operator" onclick="chooseOperator('*')">*</button>
+            <button class="button" onclick="appendNumber('1')">1</button>
+            <button class="button" onclick="appendNumber('2')">2</button>
+            <button class="button" onclick="appendNumber('3')">3</button>
+            <button class="button operator" onclick="chooseOperator('-')">-</button>
+            <button class="button" onclick="appendNumber('0')">0</button>
+            <button class="button" onclick="clearDisplay()">C</button>
+            <button class="button operator" onclick="chooseOperator('+')">+</button>
+            <button class="button equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let displayElement = document.getElementById('display');
+        let currentNumber = '';
+        let previousNumber = '';
+        let operator = '';
+
+        function appendNumber(number) {
+            if (operator && currentNumber === '') {
+                currentNumber = number;
+            } else {
+                currentNumber += number;
+            }
+            displayElement.textContent = previousNumber + ' ' + operator + ' ' + currentNumber;
+        }
+
+        function chooseOperator(op) {
+            if (currentNumber === '' && previousNumber === '') return;
+            if (currentNumber !== '' && previousNumber !== '') {
+                calculate();
+            }
+            operator = op;
+            if (previousNumber === '') {
+                previousNumber = currentNumber;
+                currentNumber = '';
+                displayElement.textContent = previousNumber + ' ' + operator;
+            }
+        }
+
+        function calculate() {
+            let result;
+            const prev = parseFloat(previousNumber);
+            const current = parseFloat(currentNumber);
+            if (isNaN(prev) || isNaN(current)) return;
+
+            switch (operator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            currentNumber = result.toString();
+            operator = '';
+            previousNumber = '';
+            displayElement.textContent = currentNumber;
+        }
+
+        function clearDisplay() {
+            currentNumber = '';
+            previousNumber = '';
+            operator = '';
+            displayElement.textContent = '';
+        }
+    </script>
+</body>
+</html>
